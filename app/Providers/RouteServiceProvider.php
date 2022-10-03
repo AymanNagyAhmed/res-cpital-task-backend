@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AdvertisingCampaign;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::model('ad-campaign', AdvertisingCampaign::class);
         $this->configureRateLimiting();
 
         $this->routes(function () {
