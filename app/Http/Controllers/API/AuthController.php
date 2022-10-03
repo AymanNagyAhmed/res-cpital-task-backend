@@ -2,52 +2,41 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginAuthRequest;
+use App\Http\Requests\RegisterAuthRequest;
+use App\Http\Resources\LoginAuthResource;
+use App\Http\Resources\RegisterAuthResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Auth;
-use Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterAuthRequest $request)
     {
-        $validator = Validator::make($request->all(),[
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8'
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors());
-        }
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-         ]);
-
+        $validated = $request->validated();
+        $validated["password"] = Hash::make($validated["password"]);
+        $user = User::create($validated);
         $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()
-            ->json(['data' => $user,'access_token' => $token, 'token_type' => 'Bearer', ]);
+        $request["token"]=$token;
+        return new RegisterAuthResource($user);
     }
 
-    public function login(Request $request)
+    public function login(LoginAuthRequest
+     $request)
     {
-        if (!Auth::attempt($request->only('email', 'password')))
+        $validated = $request->validated();
+        if (!Auth::attempt($validated))
         {
             return response()
                 ->json(['message' => 'Unauthorized'], 401);
         }
-
-        $user = User::where('email', $request['email'])->firstOrFail();
-
+        $user = User::where('email', $validated['email'])->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()
-            ->json(['message' => 'Hi '.$user->name.', welcome to home','access_token' => $token, 'token_type' => 'Bearer', ]);
+        $request["token"]= $token;
+        return new LoginAuthResource($user);
     }
 
     // method for user logout and delete token
