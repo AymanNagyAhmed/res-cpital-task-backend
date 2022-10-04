@@ -18,8 +18,9 @@ class AdvertisingCampaignResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'from' => $this->from,
-            'ro'=> $this->to,
-            'total'=>$this->daily_budget,
+            'to'=> $this->to,
+            'total'=>$this->total,
+            'daily_budget'=>$this->daily_budget,
             'owner'=>$this->owner,
             'images'=> $this->getMedia("images")
 

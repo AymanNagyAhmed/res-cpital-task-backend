@@ -13,7 +13,8 @@ class DeleteAdvertisingCampaignRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('delete', $this->advertisingCampaign);
+
+        return $this->user()->can('delete', $this->route("ad-campaign"));
     }
 
 

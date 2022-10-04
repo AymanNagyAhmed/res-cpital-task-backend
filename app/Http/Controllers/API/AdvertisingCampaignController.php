@@ -46,6 +46,7 @@ class AdvertisingCampaignController extends Controller
 
         $validated = $request->validated();
         $validated["owner_id"] = Auth::user()->id;
+
         $images = $validated['images'];
         unset($validated["images"]);
         // dd([...$validated]);

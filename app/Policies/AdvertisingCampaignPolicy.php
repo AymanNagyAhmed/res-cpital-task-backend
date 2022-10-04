@@ -65,8 +65,7 @@ class AdvertisingCampaignPolicy
      */
     public function delete(User $user, AdvertisingCampaign $advertisingCampaign)
     {
-
-        return $user == $advertisingCampaign->owner;
+        return $user->id == $advertisingCampaign->owner->id;
     }
 
     /**

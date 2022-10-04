@@ -30,9 +30,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/profile', function(Request $request) {
         return auth()->user();
     });
-    Route::resource('ad-campaigns',AdvertisingCampaignController::class);
+    Route::resource('ad-campaigns',AdvertisingCampaignController::class,);
 
     // API route for logout user
     Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
 });
 
+Route::resource('ad-campaigns',AdvertisingCampaignController::class)->only(["index","show"]);
